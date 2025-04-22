@@ -26,9 +26,10 @@ def insert_new_product(connection, product):
              "(name, unit_id, price_per_unit) "
              "VALUES ( %s , %s , %s )")
 
-    product_data = ( product['product_name'] , product['product_unit'] , product['product_price'])
+    product_data = ( product['product_name'] , product['product_unit_id'] , product['product_price_per_unit'])
     cursor.execute(query , product_data)
     connection.commit()
+    return cursor.lastrowid
 
 def delete_product(connection, product_id):
     cursor = connection.cursor()
@@ -38,9 +39,18 @@ def delete_product(connection, product_id):
     connection.commit()
     return str(product_id)
 
+def edit_product_price(connection, product_id, new_price):
+    cursor = connection.cursor()
+    query = ("UPDATE product"
+             " SET `price_per_unit` = " +str(new_price)+
+             " WHERE (`product_id` ="+str(product_id)+")")
+    cursor.execute(query)
+    connection.commit()
+    return product_id
+
 if __name__ == "__main__":
     sql_connection = get_sql_connection()
-    delete_product(sql_connection , 5)
+    edit_product_price(sql_connection , 1 , 15)
 
     product = get_all_products(sql_connection)
     for x in product:

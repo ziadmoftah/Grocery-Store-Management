@@ -10,7 +10,9 @@ var productModal = $("#productModal");
                         '<td>'+ product.product_name +'</td>'+
                         '<td>'+ product.unit_name +'</td>'+
                         '<td>'+ product.price_per_unit +'</td>'+
-                        '<td><span class="btn btn-xs btn-danger delete-product">Delete</span></td></tr>';
+                        '<td><span class="btn btn-xs btn-danger delete-product">Delete</span> ' +
+                        '<span class="btn btn-sm btn-primary pull-right edit-product">Edit</span>'
+                        '</td></tr>';
                 });
                 $("table").find('tbody').empty().html(table);
             }
@@ -23,8 +25,8 @@ var productModal = $("#productModal");
         var data = $("#productForm").serializeArray();
         var requestPayload = {
             product_name: null,
-            uom_id: null,
-            price_per_unit: null
+            product_unit_id: null,
+            product_price_per_unit: null
         };
         for (var i=0;i<data.length;++i) {
             var element = data[i];
@@ -33,10 +35,10 @@ var productModal = $("#productModal");
                     requestPayload.product_name = element.value;
                     break;
                 case 'uoms':
-                    requestPayload.uom_id = element.value;
+                    requestPayload.product_unit_id = element.value;
                     break;
                 case 'price':
-                    requestPayload.price_per_unit = element.value;
+                    requestPayload.product_price_per_unit = element.value;
                     break;
             }
         }
@@ -56,6 +58,16 @@ var productModal = $("#productModal");
         }
     });
 
+    $(document).on("click", ".edit-product", function (){
+        // TODO
+        // need to display form on Click event
+        var data = {
+            product_id : tr.data('id')
+        };
+        productModal.find('.modal-title').text('Add New Product')
+
+    });
+
     productModal.on('hide.bs.modal', function(){
         $("#id").val('0');
         $("#name, #unit, #price").val('');
@@ -68,7 +80,7 @@ var productModal = $("#productModal");
             if(response) {
                 var options = '<option value="">--Select--</option>';
                 $.each(response, function(index, uom) {
-                    options += '<option value="'+ uom.uom_id +'">'+ uom.uom_name +'</option>';
+                    options += '<option value="'+ uom.unit_id +'">'+ uom.unit_name +'</option>';
                 });
                 $("#uoms").empty().html(options);
             }

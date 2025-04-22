@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
-import products_dao
+import json
+import products_dao, measurement_units_dao
 from sql_connection import get_sql_connection
 # Flask constructor takes the name of
 # current module (__name__) as argument.
@@ -22,6 +23,28 @@ def deleteProduct():
     response = jsonify({
         'product_id' : return_id
     })
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+@app.route('/getUnitsName', methods = ['GET'])
+def getUnitsName():
+    unitsName = measurement_units_dao.get_units_name(connection)
+    response = jsonify(unitsName)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+@app.route('/insertProduct' , methods = ['POST'])
+def insertProduct():
+    request_payload = json.loads(request.form['data'])
+    print (request_payload)
+    product_id = products_dao.insert_new_product(connection, request_payload)
+    response = jsonify({'product_id' : product_id})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+@app.route('/editProductPrice' , methods = ['POST'])
+def editProductPrice():
+    response = jsonify({'product_id': products_dao.edit_product_price(connection , request.form['id'] , request.form['new_price'])})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
