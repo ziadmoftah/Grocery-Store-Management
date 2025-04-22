@@ -7,7 +7,7 @@ $(function () {
         if(response) {
             var options = '<option value="">--Select--</option>';
             $.each(response, function(index, product) {
-                options += '<option value="'+ product.product_id +'">'+ product.name +'</option>';
+                options += '<option value="'+ product.product_id +'">'+ product.product_name +'</option>';
                 productPrices[product.product_id] = product.price_per_unit;
             });
             $(".product-box").find("select").empty().html(options);
@@ -45,7 +45,7 @@ $("#saveOrder").on("click", function(){
     var formData = $("form").serializeArray();
     var requestPayload = {
         customer_name: null,
-        total: null,
+        total_price: null,
         order_details: []
     };
     var orderDetails = [];

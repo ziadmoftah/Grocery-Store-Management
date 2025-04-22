@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request
 import json
-import products_dao, measurement_units_dao
+import products_dao, measurement_units_dao, orders_dao
 from sql_connection import get_sql_connection
+
 # Flask constructor takes the name of
 # current module (__name__) as argument.
 app = Flask(__name__)
@@ -48,6 +49,18 @@ def editProductPrice():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+@app.route ('/insertOrder' , methods = ['POST'])
+def insertOrder():
+    order_data = json.loads(request.form['data'])
+    orders_dao.insert_order(connection, order_data)
+    response = jsonify("OK")
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route ('/getAllOrders' , methods = ['GET'])
+def getAllOrders():
+    pass
 # main driver function
 if __name__ == '__main__':
 

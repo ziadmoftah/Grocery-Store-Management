@@ -15,7 +15,7 @@ function callApi(method, url, data) {
         url: url,
         data: data
     }).done(function( msg ) {
-        window.location.reload();
+        //window.location.reload();
     });
 }
 
