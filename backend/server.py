@@ -52,15 +52,19 @@ def editProductPrice():
 @app.route ('/insertOrder' , methods = ['POST'])
 def insertOrder():
     order_data = json.loads(request.form['data'])
-    orders_dao.insert_order(connection, order_data)
-    response = jsonify("OK")
+    order_id = orders_dao.insert_order(connection, order_data)
+    response = jsonify({'order_id' : order_id})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 
 @app.route ('/getAllOrders' , methods = ['GET'])
 def getAllOrders():
-    pass
+    order_details = orders_dao.get_all_orders(connection)
+    response = jsonify(order_details)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
 # main driver function
 if __name__ == '__main__':
 

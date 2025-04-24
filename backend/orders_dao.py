@@ -11,6 +11,7 @@ def insert_order(connection , order):
     connection.commit()
     order_id = cursor.lastrowid
     insert_order_product_details(connection, order_product_details , order_id)
+    return order_id
 
 def insert_order_product_details(connection , order_products_details , order_id):
     cursor = connection.cursor()
@@ -22,5 +23,23 @@ def insert_order_product_details(connection , order_products_details , order_id)
     cursor.executemany(query, product_detail_object)
     connection.commit()
 
+def get_all_orders(connection):
+    cursor = connection.cursor()
+    query = ('SELECT order_id, customer_name, total_price, time_of_purchase '
+             'FROM grocery_store.order')
+    cursor.execute(query)
+    order_details = []
+    for (order_id, customer_name, total_price, time_of_purchase) in cursor:
+        order_details.append({
+            'order_id' : order_id,
+            'customer_name' : customer_name,
+            'total_price' : total_price,
+            'time_of_purchase' : time_of_purchase
+        })
+    return order_details
+
 if __name__ == "__main__":
     sql_connection = get_sql_connection()
+    orders = get_all_orders(sql_connection)
+    for x in orders:
+        print(x)
